@@ -23,7 +23,11 @@ module.exports = {
           presets: ['es2015', 'react', 'stage-0'],
         },
       },
-    ],
+      {
+        test: /\.scss$/,
+        loader: ['style-loader', 'css-loader', 'sass-loader']
+      }
+    ]
   },
   devServer: {
     inline: true,

@@ -1,0 +1,41 @@
+#speed {
+	font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+	position: absolute;
+	z-index: 10;
+	height: 400px;
+	width: 400px;
+	top: 50px;
+	color: white;
+	padding: 20px 20px 20px 20px;
+	background-color: rgba(150, 150, 150, 0.7);
+	font-weight: 800;
+	font-size: 18px;
+
+	.speed {
+		font-size: 96px;
+		font-weight: 100;
+		letter-spacing: 1px;
+		text-align: center;
+	}
+
+	.temp {
+		font-size: 54px;
+		font-weight: 100;
+		letter-spacing: 1px;
+		text-align: center;
+	}
+}
+
+#bar {
+	z-index: 10;
+	height: 200px;
+	width: 100%;
+	bottom: 0px;
+	position: absolute;
+	z-index: 10;
+	color: white;
+	padding: 20px 20px 20px 20px;
+	background-color: rgba(150, 150, 150, 0.7);
+	font-weight: 800;
+	font-size: 18px;
+}

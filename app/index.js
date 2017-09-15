@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { compose, withProps, lifecycle } from "recompose";
-import { WindowResizeListener } from 'react-window-resize-listener'
 import {
   withScriptjs,
   withGoogleMap,
@@ -9,21 +8,21 @@ import {
 } from "react-google-maps";
 import InfoBox from "react-google-maps/lib/components/addons/InfoBox";
 import demoFancyMapStyles from "./map-style.json";
+import './main.scss'
+import Bar from './bar';
+import Speed from './speed';
 
 const MainMap = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places",
     loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `600px` }} />,
+    containerElement: <div style={{ height: `100%` }} />,
     mapElement: <div style={{ height: `100%` }} />,
     center: { lat: 24.788899, lng: 120.996769 },
   }),
   withScriptjs,
   withGoogleMap,
   lifecycle({
-    componentWillMount() {
-      console.log("yes")
-    }
   })
 )(props =>
   <GoogleMap
@@ -36,4 +35,9 @@ const MainMap = compose(
 
 
 
-ReactDOM.render( <MainMap /> , document.getElementById('app'));
+ReactDOM.render( 
+  <div style={{position: `absolute`, height: `100%`, width: `100%`}}>
+    <MainMap />
+    <Speed />
+    <Bar />
+  </div>, document.getElementById('app'));
