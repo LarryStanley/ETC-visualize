@@ -28,7 +28,7 @@
 
 #bar {
 	z-index: 10;
-	height: 200px;
+	height: 12px;
 	width: 100%;
 	bottom: 0px;
 	position: absolute;
@@ -38,4 +38,5 @@
 	background-color: rgba(150, 150, 150, 0.7);
 	font-weight: 800;
 	font-size: 18px;
+	padding: 0 0 0 0;
 }

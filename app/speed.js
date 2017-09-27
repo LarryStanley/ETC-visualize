@@ -1,20 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { compose, withProps, lifecycle } from "recompose";
+import moment from 'moment';
 
 export default class Speed extends React.Component {
 	constructor(props) {
 	    super(props);
-	    console.log('constructor');
-	 }
+	}
+
 	render() {
 		return (
 			<div id='speed'>
 				<div>
-					2017/09/25 <br/>
+					{this.props.currentDate} <br/>
 					內湖 - 圓山 南下 預估車速
 					<div className="speed">
-						86
+						{this.props.currentSpeed}
 						<span style={{ fontSize: `18` }}>
 							km/hr
 						</span>
@@ -25,7 +26,7 @@ export default class Speed extends React.Component {
 					<div className="col-md-4">
 						氣溫 <br/>
 						<div className="temp">
-							26
+							{this.props.currentTemp}
 							<span style={{ fontSize: `18` }}>
 								°C
 							</span>
@@ -34,7 +35,7 @@ export default class Speed extends React.Component {
 					<div className="col-md-4">
 						行駛約 <br/>
 						<div className="temp">
-							15
+							{this.props.currentEstimateTime}
 							<span style={{ fontSize: `14` }}>
 								分鐘
 							</span>
