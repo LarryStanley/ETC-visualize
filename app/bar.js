@@ -10,7 +10,7 @@ const Handle = Slider.Handle;
 
 const firstTimestamp = moment("2014-01-01 00:00:00").format("X")
 const lastTimestamp = moment().format("X")
-const defaultTimestamp = moment("2015-05-30 00:00:00").format("X")
+const defaultTimestamp = moment("2014-05-30 00:00:00").format("X")
 
 export default class Bar extends React.Component {
 	constructor(props) {
@@ -21,7 +21,7 @@ export default class Bar extends React.Component {
 	}
 
 	componentWillMount() {
-		this.state = { currentDate: moment("2015-05-30 00:00:00").format("YYYY-MM-DD HH:MM")}
+		this.state = { currentDate: moment("2014-05-30 00:00:00").format("YYYY-MM-DD HH:MM")}
 	}
 
 	updateCurrentTime(value) {

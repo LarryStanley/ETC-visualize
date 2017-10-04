@@ -48,6 +48,39 @@ export default class Speed extends React.Component {
 						</div>
 					</div>
 				</div>
+			    <div className="row center car-type">
+    				<div className="col-md-12" style={{ textAlign: 'left', marginBottom: `10px` }}>車種</div>
+			        <div className="col-md-offset-1 col-md-2" style={{ padding: `0 0 0 0` }}>
+			        	<a className="hvr-fade activate" href="">
+							小客車
+				        	<img width="100%" src={require('./images/006-car-white.png')} />
+			        	</a>
+		        	</div>
+			        <div className="col-md-2 " style={{ padding: `0 0 0 0` }}>
+			        	<a className="hvr-fade" href="">
+				        	小貨車
+				        	<img width="100%" src={require('./images/004-delivery-truck-white.png')} />
+			        	</a>
+		        	</div>
+			        <div className="col-md-2" style={{ padding: `0 0 0 0` }}>
+			        	<a className="hvr-back-pulse" href="">
+				        	大客車
+				        	<img width="100%" src={require('./images/005-bus-white.png')} />
+			        	</a>
+		        	</div>
+			        <div className="col-md-2" style={{ padding: `0 0 0 0` }}>
+			        	<a className="hvr-back-pulse" href="">
+							大貨車
+				        	<img width="100%" src={require('./images/002-transport-white.png')} />
+			        	</a>
+		        	</div>
+			        <div className="col-md-2" style={{ padding: `0 0 0 0` }}>
+			        	<a className="hvr-back-pulse" href="">
+				        	聯結車
+				        	<img width="100%" src={require('./images/001-truck-white.png')} />
+			        	</a>
+		        	</div>
+			    </div>
 			</div>
 		);
 	}

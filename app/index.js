@@ -11,12 +11,14 @@ import {
 import InfoBox from "react-google-maps/lib/components/addons/InfoBox";
 import demoFancyMapStyles from "./map-style.json";
 import './main.scss'
+import './hover.scss'
 import Bar from './bar';
 import Speed from './speed';
 import moment from 'moment';
 import axios from 'axios';
-
-var colors = ["red", 'orange', 'blue'];
+import chroma from 'chroma-js';
+var Promise = require("bluebird");
+var async = require('async');
 
 const MainMap = compose(
   withProps({
@@ -30,39 +32,8 @@ const MainMap = compose(
   withGoogleMap,
   lifecycle({
     componentWillMount() {
-      this.setState({
-        directions: []
-      })
     },
     componentDidMount() {
-      var self = this
-      const DirectionsService = new google.maps.DirectionsService();
-      axios.get('https://etc-api.ncufood.info/road')
-          .then(function(response) {
-            console.log(response)
-            response.data.map(function(station, i) {
-              if (i < 10) {
-                DirectionsService.route({
-                  origin: new google.maps.LatLng(station.start.lat, station.start.lng),
-                  destination: new google.maps.LatLng(station.end.lat, station.end.lng),
-                  travelMode: google.maps.TravelMode.DRIVING,
-                }, (result, status) => {
-                  if (status === google.maps.DirectionsStatus.OK) {
-                    console.log("success")
-                    self.setState({
-                      directions: self.state.directions.concat([result]),
-                    });
-                  } else {
-                    console.log(station.start.lat + "," + station.start.lng + "," + station.end.lat + "," + station.end.lng)
-                    console.error(`error fetching directions ${result}`);
-                  }
-                });
-              }
-            });
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
     }
   })
 )(props =>
@@ -71,8 +42,8 @@ const MainMap = compose(
     defaultCenter={props.center}
     defaultOptions={{ styles: demoFancyMapStyles }}
   >
-    { props.showDirection && props.directions.length && props.directions.map(function(direction, i){
-        return <DirectionsRenderer key={i} directions={direction} color={props.color}/>;
+    { props.directions.map(function(direction, i){
+        return <DirectionsRenderer key={i} directions={direction.direction} color={direction.color}/>;
     })}
   </GoogleMap>
 );
@@ -83,17 +54,60 @@ class MainFrame extends React.Component {
     this.updateCurrentTime = this.updateCurrentTime.bind(this)
     this.beforeUpdateSlider = this.beforeUpdateSlider.bind(this)
     this.afterUpdateSlider = this.afterUpdateSlider.bind(this)
-  }
-
-  componentWillMount() {
     this.state = { 
-      currentDate: moment("2015-05-30 00:00:00").format("YYYY-MM-DD HH:MM"),
+      currentDate: moment("2014-05-30 00:00:00").format("YYYY-MM-DD HH:MM"),
       currentSpeed: 50,
       currentTemp: 23,
       currentEstimateTime: 10,
-      color: "red",
-      showDirection: true
+      showDirection: true,
+      road: {},
+      colorRoad: [],
+      car_type: 31
     }
+  }
+
+  componentWillMount() {
+    var self = this
+
+     axios.get('https://etc-api.ncufood.info/road')
+      .then(function(response) {
+        var roads = {}
+        Promise.map( response.data,function(road) {
+          roads[road.start] = road.direction
+        }).then(function() {
+          self.setState({
+            road: roads
+          })
+          self.getRoadHistory(2014, 1, 25, 'C', 32);
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  getRoadHistory(year, month, day, time_type, car_type) {
+    var self = this;
+    var finalRoad = [];
+    var f = chroma.scale(['red','yellow','green']);
+    this.setState({colorRoad: []})
+    axios.get('https://etc-api.ncufood.info/history?month='+ month +'&year='+ year +'&day='+ day +'&time_type='+ time_type +'&car_type=' + car_type)
+      .then(function(response) {
+        var i = 0;
+        async.each(response.data ,function(history, i) {
+          if (self.state.road[history.gantryfrom]){
+            self.setState({
+              colorRoad: self.state.colorRoad.concat([{
+                direction: JSON.parse(self.state.road[history.gantryfrom]),
+                color: f(history.average_speed/110).hex()
+              }])
+            })
+          }
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   }
 
   updateCurrentTime(value) {
@@ -102,26 +116,52 @@ class MainFrame extends React.Component {
         currentSpeed: parseInt(Math.random() * (100 - 40) + 40),
         currentTemp: parseInt(Math.random() * (36 - 10) + 10),
         currentEstimateTime: parseInt(Math.random() * (20 - 10) + 10),
-      })
+      });
   }
 
   beforeUpdateSlider(value) {
     this.setState({
-      showDirection: false
+      showDirection: true
     });
   }
 
   afterUpdateSlider(value) {
-    this.setState({
-      showDirection: true,
-      color: colors[Math.floor(Math.random()*colors.length)],
-    });
+
+    var timeString = moment.unix(value).format("YYYY-MM-DD HH:MM");
+    timeString = timeString.split(' ');
+    var hour = parseInt(timeString[1].split(':')[0]);
+    timeString = timeString[0].split('-');
+    var year = timeString[0];
+    var month = timeString[1];
+    var day = timeString[2];
+    var time_type = 'A'
+    var car_type = this.state.car_type;
+    if (hour >=0 && hour < 3) {
+      time_type = 'A'
+    } else if (hour >= 3 && hour < 6) {
+      time_type = 'B'
+    } else if (hour >= 6 && hour < 9) {
+      time_type = 'C'
+    } else if (hour >= 9 && hour < 12) {
+      time_type = 'D'
+    } else if (hour >= 12 && hour < 15) {
+      time_type = 'E'
+    } else if (hour >= 15 && hour < 18) {
+      time_type = 'F'
+    } else if (hour >= 18 && hour < 21) {
+      time_type = 'G'
+    } else {
+      time_type = 'H'
+    }
+
+    this.getRoadHistory(year, month, day, time_type, car_type);
+    
   }
 
   render() {
     return (
       <div style={{position: `absolute`, height: `100%`, width: `100%`}}>
-        <MainMap color={this.state.color} showDirection={this.state.showDirection}/>
+        <MainMap directions={this.state.colorRoad} showDirection={this.state.showDirection}/>
         <Speed currentDate={this.state.currentDate} 
               currentSpeed={this.state.currentSpeed} 
               currentTemp={this.state.currentTemp} 
