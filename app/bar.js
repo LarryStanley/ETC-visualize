@@ -8,10 +8,6 @@ import moment from 'moment';
 
 const Handle = Slider.Handle;
 
-const firstTimestamp = moment("2014-01-01 00:00:00").format("X")
-const lastTimestamp = moment().format("X")
-const defaultTimestamp = moment("2014-05-30 00:00:00").format("X")
-
 export default class Bar extends React.Component {
 	constructor(props) {
 	    super(props)
@@ -21,11 +17,9 @@ export default class Bar extends React.Component {
 	}
 
 	componentWillMount() {
-		this.state = { currentDate: moment("2014-05-30 00:00:00").format("YYYY-MM-DD HH:MM")}
 	}
 
 	updateCurrentTime(value) {
-		this.setState({ currentDate: moment.unix(value).format("YYYY-MM-DD HH:MM")})
 		this.props.updateCurrentTime(value)
 	}
 
@@ -40,7 +34,14 @@ export default class Bar extends React.Component {
 	render() {
 		return (
 			<div id='bar'>
-				<Slider min={parseInt(firstTimestamp)} defaultValue={parseInt(defaultTimestamp)} max={parseInt(lastTimestamp)} onBeforeChange={this.beforeUpdateSlider} onChange={this.updateCurrentTime} onAfterChange={this.afterUpdateSlider} />
+				<Slider
+						   min={parseInt(this.props.startPeriodTime)} 
+					defaultValue={parseInt(this.props.defaultValue)}
+						 value={parseInt(this.props.value)} 
+				 		  max={parseInt(this.props.endPeriodTime)} 
+			   onBeforeChange={this.beforeUpdateSlider} 
+			   		 onChange={this.updateCurrentTime} 
+			   	onAfterChange={this.afterUpdateSlider} />
 			</div>
 		);
 	}

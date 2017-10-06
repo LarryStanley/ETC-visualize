@@ -1,52 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { compose, withProps, lifecycle } from "recompose";
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  DirectionsRenderer,
-  Polyline
-} from "react-google-maps";
-import InfoBox from "react-google-maps/lib/components/addons/InfoBox";
-import demoFancyMapStyles from "./map-style.json";
 import './main.scss'
 import './hover.scss'
 import Bar from './bar';
 import Speed from './speed';
+import Map from './Map'
 import moment from 'moment';
 import axios from 'axios';
-import chroma from 'chroma-js';
-var Promise = require("bluebird");
-var async = require('async');
-
-const MainMap = compose(
-  withProps({
-    googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places",
-    loadingElement: <div style={{ height: `100%` }} />,
-    containerElement: <div style={{ height: `100%` }} />,
-    mapElement: <div style={{ height: `calc(100% - 10px)` }} />,
-    center: { lat: 24.788899, lng: 120.996769 },
-  }),
-  withScriptjs,
-  withGoogleMap,
-  lifecycle({
-    componentWillMount() {
-    },
-    componentDidMount() {
-    }
-  })
-)(props =>
-  <GoogleMap
-    defaultZoom={10}
-    defaultCenter={props.center}
-    defaultOptions={{ styles: demoFancyMapStyles }}
-  >
-    { props.directions.map(function(direction, i){
-        return <DirectionsRenderer key={i} directions={direction.direction} color={direction.color}/>;
-    })}
-  </GoogleMap>
-);
+import Static from './static';
+import Predict from './predict';
 
 class MainFrame extends React.Component {
   constructor(props) {
@@ -54,68 +17,68 @@ class MainFrame extends React.Component {
     this.updateCurrentTime = this.updateCurrentTime.bind(this)
     this.beforeUpdateSlider = this.beforeUpdateSlider.bind(this)
     this.afterUpdateSlider = this.afterUpdateSlider.bind(this)
+    this.playHistory = this.playHistory.bind(this)
+    this.pause = this.pause.bind(this)
+    this.updateLabel = this.updateLabel.bind(this)
+    this.updateTimePeriod = this.updateTimePeriod.bind(this)
+    this.updateRoadSelection = this.updateRoadSelection.bind(this)
+    this.getSelectRoadHistory = this.getSelectRoadHistory.bind(this)
+    this.updateTimeStampFromSpeed = this.updateTimeStampFromSpeed.bind(this)
     this.state = { 
-      currentDate: moment("2014-05-30 00:00:00").format("YYYY-MM-DD HH:MM"),
-      currentSpeed: 50,
+      currentDate: moment("2014-09-01 00:00:00").format("YYYY-MM-DD HH:MM"),
+      currentSpeed: 75,
       currentTemp: 23,
       currentEstimateTime: 10,
       showDirection: true,
       road: {},
       colorRoad: [],
-      car_type: 31
+      car_type: 31,
+      pause: true,
+      playing: false,
+      currentTimeStamp: moment("2014-09-01 00:00:00").format("X"),
+      startPeriodTime: moment("2014-09-01 00:00:00").format("X"),
+      endPeriodTime: moment("2014-09-30 00:00:00").format("X"),
+      currentRoadSelect: "01F0005S",
+      road_name: "基隆端（基隆港）- 基隆（長庚）",
+      currentWeatherStation: "C0AD00",
+      rain: 0,
+      linearStaticGraphyData: {
+        points: [],
+          xValues: [],
+          yMin: 0,
+          yMax: 130
+
+      }
     }
   }
 
   componentWillMount() {
     var self = this
+  }
 
-     axios.get('https://etc-api.ncufood.info/road')
-      .then(function(response) {
-        var roads = {}
-        Promise.map( response.data,function(road) {
-          roads[road.start] = road.direction
-        }).then(function() {
-          self.setState({
-            road: roads
-          })
-          self.getRoadHistory(2014, 1, 25, 'C', 32);
-        });
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+  componentDidMount() {
+    this.getSelectRoadHistory()
   }
 
   getRoadHistory(year, month, day, time_type, car_type) {
-    var self = this;
-    var finalRoad = [];
-    var f = chroma.scale(['red','yellow','green']);
-    this.setState({colorRoad: []})
-    axios.get('https://etc-api.ncufood.info/history?month='+ month +'&year='+ year +'&day='+ day +'&time_type='+ time_type +'&car_type=' + car_type)
-      .then(function(response) {
-        var i = 0;
-        async.each(response.data ,function(history, i) {
-          if (self.state.road[history.gantryfrom]){
-            self.setState({
-              colorRoad: self.state.colorRoad.concat([{
-                direction: JSON.parse(self.state.road[history.gantryfrom]),
-                color: f(history.average_speed/110).hex()
-              }])
-            })
-          }
-        });
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+    this.map.getRoadHistory(year, month, day, time_type, car_type)
+  }
+
+  playHistory(year, month) {
+    this.map.playHistory(year, month, this.state.car_type)
+    this.setState({
+      playing: true,
+      pause: false
+    })
   }
 
   updateCurrentTime(value) {
       this.setState({ currentDate: moment.unix(value).format("YYYY-MM-DD HH:MM")})
       this.setState({
-        currentSpeed: parseInt(Math.random() * (100 - 40) + 40),
+        currentSpeed: parseInt(Math.random() * (100 - 70) + 70),
         currentTemp: parseInt(Math.random() * (36 - 10) + 10),
         currentEstimateTime: parseInt(Math.random() * (20 - 10) + 10),
+        currentTimeStamp: value
       });
   }
 
@@ -123,6 +86,83 @@ class MainFrame extends React.Component {
     this.setState({
       showDirection: true
     });
+  }
+
+  pause() {
+    this.map.pauseMap()
+    this.setState({
+      playing: false,
+      pause: true
+    })
+  }
+
+  updateLabel(time, speed, travel_time) {
+    var self = this
+    if (!time)
+      time = this.state.currentDate
+    else {
+      var url = 'https://etc-api.ncufood.info/weather?time=' + time + "&stationId=" + this.state.currentWeatherStation
+      axios.get(url )
+        .then(function(response) {
+          if (response.data.length){
+            self.setState({
+              currentTemp: response.data[0].TEMP,
+              rain: response.data[0].H_24R
+            })
+          }          
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
+    this.setState({
+      currentDate: time,
+      currentTimeStamp: moment(time).format("X"),
+      currentSpeed: parseInt(speed),
+      currentEstimateTime: travel_time
+    })
+  }
+
+  updateRoadSelection(value, weather_station,lat, lng, road_name) {
+    console.log(road_name)
+    var self = this
+    this.setState({
+      currentRoadSelect: value,
+      currentWeatherStation: weather_station,
+      road_name: road_name
+    }, () => {
+      this.map.changeMapCenter(lat, lng)
+      this.getSelectRoadHistory()
+    })
+  }
+
+  updateTimeStampFromSpeed(year, month) {
+    var date = moment(year + "-" + month + "-" + "01 00:00")
+    var endDate = moment(date).endOf('month')
+    this.setState({
+      currentTimeStamp: date.format("X"),
+      currentDate: date.format("YYYY-MM-DD HH:MM"),
+      startPeriodTime: date.format("X"),
+      endPeriodTime: endDate.format("X")
+    })
+  }
+
+  getSelectRoadHistory() {
+    var self = this;
+    var date = moment(self.state.currentTimeStamp, "X");
+    var year = date.format("YYYY");
+    console.log(year)
+    self.static.getData(this.state.currentRoadSelect, year, self.state.car_type, self.state.currentWeatherStation)
+  }
+
+  updateTimePeriod(year, month) {
+    var startDate = moment([year, month - 1])
+    var endDate = moment(startDate).endOf('month')
+    this.setState({
+      currentTimeStamp: startDate.format("X"),
+      startPeriodTime: startDate.format("X"),
+      endPeriodTime: endDate.format("X")
+    })
   }
 
   afterUpdateSlider(value) {
@@ -159,14 +199,35 @@ class MainFrame extends React.Component {
   }
 
   render() {
+
     return (
       <div style={{position: `absolute`, height: `100%`, width: `100%`}}>
-        <MainMap directions={this.state.colorRoad} showDirection={this.state.showDirection}/>
+        <Map directions={this.state.road} 
+                  onRef={ref => (this.map = ref)} 
+                  pause={this.pause}
+                  updateLabel={this.updateLabel}
+                  updateTimePeriod={this.updateTimePeriod}
+                  road={this.state.currentRoadSelect} />
         <Speed currentDate={this.state.currentDate} 
               currentSpeed={this.state.currentSpeed} 
-              currentTemp={this.state.currentTemp} 
-              currentEstimateTime={this.state.currentEstimateTime}/>
-        <Bar updateCurrentTime={this.updateCurrentTime} beforeUpdateSlider={this.beforeUpdateSlider} afterUpdateSlider={this.afterUpdateSlider} />
+              currentTemp={this.state.currentTemp}
+              rain={this.state.rain}
+              currentEstimateTime={this.state.currentEstimateTime}
+              playHistory={this.playHistory}
+              pause={this.state.pause}
+              playing={this.state.playing}
+              pauseHistory={this.pause}
+              updateRoadSelection={this.updateRoadSelection}
+              updateTimeStampFromSpeed={this.updateTimeStampFromSpeed} />
+        <Bar defaultValue={parseInt(moment("2014-09-01 00:00:00").format("X"))}
+        value={this.state.currentTimeStamp} 
+   startPeriodTime={this.state.startPeriodTime} 
+     endPeriodTime={this.state.endPeriodTime} 
+  updateCurrentTime={this.updateCurrentTime} 
+beforeUpdateSlider={this.beforeUpdateSlider}
+ afterUpdateSlider={this.afterUpdateSlider} />
+        <Static onRef={ref => (this.static = ref)} road_name={this.state.road_name} width={600} height={400}/>
+        <Predict onRef={ref => (this.predict = ref)} height={400}/>
       </div>
     )
   }
