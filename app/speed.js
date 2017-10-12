@@ -13,13 +13,19 @@ export default class Speed extends React.Component {
 		this.directionChange = this.directionChange.bind(this)
 		this.roadChange = this.roadChange.bind(this)
 		this.roadTypeChange = this.roadTypeChange.bind(this)
+		this.changeCarType = this.changeCarType.bind(this)
 	    this.state = {
 	    	year: "2014",
 	    	month: "9",
 	    	playing: false,
 	    	stations: [],
 	    	road_type: "國1",
-	    	selectDirection: "S"
+	    	selectDirection: "S",
+	    	smallCar: true,
+	    	smallVan: false,
+	    	bus: false,
+	    	bigVan: false,
+	    	connectCar: false
 	    }
 	}
 
@@ -93,13 +99,30 @@ export default class Speed extends React.Component {
 		})
 	}
 
+	changeCarType(id) {
+		var self = this
+		this.setState({
+			smallCar: false,
+	    	smallVan: false,
+	    	bus: false,
+	    	bigVan: false,
+	    	connectCar: false
+		}, () => {
+			this.setState({
+				[id]: true
+			}, () => {
+				self.props.updateCarType(id)
+			})
+		})
+	}
+
 	render() {
 		return (
 			<div id='speed'>
 				<div>
 					{this.props.currentDate} <br/>
 					<div className="row">
-						<div className="col-md-3 form-group">
+						<div className="col-xs-3 col-sm-3 col-md-3 form-group">
 							<select className="form-control" value={this.state.road_type} onChange={this.roadTypeChange}>
 								<option value="國1">國1</option>
 								<option value="國1高架">國1高架</option>
@@ -108,13 +131,13 @@ export default class Speed extends React.Component {
 								<option value="國5">國5</option>
 							</select>	
 						</div>
-						<div className="col-md-3 form-group">
+						<div className="col-xs-3 col-sm-3 col-md-3 form-group">
 							<select className="form-control" value={this.state.selectDirection} onChange={this.directionChange}>
 								<option value="S">南下</option>
 								<option value="N">北上</option>
 							</select>	
 						</div>
-						<div className="col-md-6 form-group">
+						<div className="col-xs-6 col-sm-6 col-md-6 form-group">
 							<select className="form-control" value={this.state.selectRoad} onChange={this.roadChange}>
 				                { this.state.stations.map(value => <option key={value.id} value={value.station_number}>{value.start} - {value.end}</option>) }
 				            </select>
@@ -130,7 +153,7 @@ export default class Speed extends React.Component {
 				</div>
 				<hr/>
 				<div className="row" style={{ textAlign: `center` }}>
-					<div className="col-md-4">
+					<div className="col-md-4 col-sm-4 col-xs-4">
 						行駛約 <br/>
 						<div className="temp">
 							{this.props.currentEstimateTime}
@@ -139,7 +162,7 @@ export default class Speed extends React.Component {
 							</span>
 						</div>
 					</div>
-					<div className="col-md-4">
+					<div className="col-md-4 col-sm-4 col-xs-4">
 						氣溫 <br/>
 						<div className="temp">
 							{this.props.currentTemp}
@@ -148,7 +171,7 @@ export default class Speed extends React.Component {
 							</span>
 						</div>
 					</div>
-					<div className="col-md-4">
+					<div className="col-md-4 col-sm-4 col-xs-4">
 						雨量 <br/>
 						<div className="temp" style={{ fontSize: `48` }}>
 							{this.props.rain}
@@ -156,41 +179,41 @@ export default class Speed extends React.Component {
 					</div>
 				</div>
 			    <div className="row center car-type">
-    				<div className="col-md-12 title" >車種</div>
-			        <div className="col-md-offset-1 col-md-2" style={{ padding: `0 0 0 0` }}>
-			        	<a className="hvr-fade activate" href="">
+    				<div className="col-md-12 title col-sm-12 col-xs-12" >車種</div>
+			        <div className="col-md-offset-1 col-md-2 col-sm-2 col-xs-2" style={{ padding: `0 0 0 0` }}>
+			        	<a className={'hvr-fade ' + (this.state.smallCar ? 'activate': '')} id="smallCar" onClick={(e) => this.changeCarType("smallCar",e)}>
 							小客車
 				        	<img width="100%" src={require('./images/006-car-white.png')} />
 			        	</a>
 		        	</div>
-			        <div className="col-md-2 " style={{ padding: `0 0 0 0` }}>
-			        	<a className="hvr-fade" href="">
+			        <div className="col-md-2 col-sm-2 col-xs-2" style={{ padding: `0 0 0 0` }}>
+			        	<a className={'hvr-fade ' + (this.state.smallVan ? 'activate': '')} id="smallVan" onClick={(e) => this.changeCarType("smallVan",e)}>
 				        	小貨車
 				        	<img width="100%" src={require('./images/004-delivery-truck-white.png')} />
 			        	</a>
 		        	</div>
-			        <div className="col-md-2" style={{ padding: `0 0 0 0` }}>
-			        	<a className="hvr-back-pulse" href="">
+			        <div className="col-md-2 col-sm-2 col-xs-2" style={{ padding: `0 0 0 0` }}>
+			        	<a className={'hvr-fade ' + (this.state.bus ? 'activate': '')} id="bus" onClick={(e) => this.changeCarType("bus",e)}>
 				        	大客車
 				        	<img width="100%" src={require('./images/005-bus-white.png')} />
 			        	</a>
 		        	</div>
-			        <div className="col-md-2" style={{ padding: `0 0 0 0` }}>
-			        	<a className="hvr-back-pulse" href="">
+			        <div className="col-md-2 col-sm-2 col-xs-2" style={{ padding: `0 0 0 0` }}>
+			        	<a className={'hvr-fade ' + (this.state.bigVan ? 'activate': '')} id="bigVan" onClick={(e) => this.changeCarType("bigVan",e)}>
 							大貨車
 				        	<img width="100%" src={require('./images/002-transport-white.png')} />
 			        	</a>
 		        	</div>
-			        <div className="col-md-2" style={{ padding: `0 0 0 0` }}>
-			        	<a className="hvr-back-pulse" href="">
+			        <div className="col-md-2 col-sm-2 col-xs-2" style={{ padding: `0 0 0 0` }}>
+			        	<a className={'hvr-fade ' + (this.state.connectCar ? 'activate': '')} id="connectCar" onClick={(e) => this.changeCarType("connectCar",e)}>
 				        	聯結車
 				        	<img width="100%" src={require('./images/001-truck-white.png')} />
 			        	</a>
 		        	</div>
 			    </div>
 			    <div className="row monthSelection">
-    				<div className="col-md-12 title">查看月份</div>
-			    	<div className="col-md-6">
+    				<div className="col-md-12 col-sm-12 title">查看月份</div>
+			    	<div className="col-md-6 col-sm-6 col-xs-6">
 						<div className="form-group">
 							<label htmlFor="">年</label>
 							<select name="" id="year" className="form-control"
@@ -202,7 +225,7 @@ export default class Speed extends React.Component {
 							</select>
 						</div>
 			    	</div>
-			    	<div className="col-md-6">
+			    	<div className="col-md-6 col-sm-6 col-xs-6">
 			    		<div className="form-group">
 							<label htmlFor="">月</label>
 							<select name="" id="month" className="form-control"
@@ -222,7 +245,7 @@ export default class Speed extends React.Component {
 							</select>
 						</div>
 			    	</div>
-			    	<div className="col-md-12 play">
+			    	<div className="col-md-12 col-sm-12 col-xs-12 play">
 			    		<a onClick={this.playHistory}>
 			    		{this.props.pause &&
 							<span className="glyphicon glyphicon-play"></span>

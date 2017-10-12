@@ -50007,6 +50007,7 @@ var MainFrame = function (_React$Component) {
     _this.updateRoadSelection = _this.updateRoadSelection.bind(_this);
     _this.getSelectRoadHistory = _this.getSelectRoadHistory.bind(_this);
     _this.updateTimeStampFromSpeed = _this.updateTimeStampFromSpeed.bind(_this);
+    _this.updateCarType = _this.updateCarType.bind(_this);
     _this.state = {
       currentDate: (0, _moment2.default)("2014-09-01 00:00:00").format("YYYY-MM-DD HH:MM"),
       currentSpeed: 75,
@@ -50140,6 +50141,31 @@ var MainFrame = function (_React$Component) {
       });
     }
   }, {
+    key: 'updateCarType',
+    value: function updateCarType(type) {
+      if (type == 'smallCar') {
+        this.setState({
+          car_type: 31
+        });
+      } else if (type == 'smallVan') {
+        this.setState({
+          car_type: 32
+        });
+      } else if (type == 'bus') {
+        this.setState({
+          car_type: 41
+        });
+      } else if (type == 'bigVan') {
+        this.setState({
+          car_type: 42
+        });
+      } else {
+        this.setState({
+          car_type: 5
+        });
+      }
+    }
+  }, {
     key: 'getSelectRoadHistory',
     value: function getSelectRoadHistory() {
       var self = this;
@@ -50218,7 +50244,8 @@ var MainFrame = function (_React$Component) {
           playing: this.state.playing,
           pauseHistory: this.pause,
           updateRoadSelection: this.updateRoadSelection,
-          updateTimeStampFromSpeed: this.updateTimeStampFromSpeed }),
+          updateTimeStampFromSpeed: this.updateTimeStampFromSpeed,
+          updateCarType: this.updateCarType }),
         _react2.default.createElement(_bar2.default, { defaultValue: parseInt((0, _moment2.default)("2014-09-01 00:00:00").format("X")),
           value: this.state.currentTimeStamp,
           startPeriodTime: this.state.startPeriodTime,
@@ -50226,12 +50253,16 @@ var MainFrame = function (_React$Component) {
           updateCurrentTime: this.updateCurrentTime,
           beforeUpdateSlider: this.beforeUpdateSlider,
           afterUpdateSlider: this.afterUpdateSlider }),
-        _react2.default.createElement(_static2.default, { onRef: function onRef(ref) {
-            return _this3.static = ref;
-          }, road_name: this.state.road_name, width: 600, height: 400 }),
-        _react2.default.createElement(_predict2.default, { onRef: function onRef(ref) {
-            return _this3.predict = ref;
-          }, height: 400 })
+        _react2.default.createElement(
+          'div',
+          { style: { position: 'absolute', height: '100%', width: '100%' } },
+          _react2.default.createElement(_static2.default, { onRef: function onRef(ref) {
+              return _this3.static = ref;
+            }, road_name: this.state.road_name, width: 600, height: 400 }),
+          _react2.default.createElement(_predict2.default, { onRef: function onRef(ref) {
+              return _this3.predict = ref;
+            }, height: 400 })
+        )
       );
     }
   }]);
@@ -61683,7 +61714,7 @@ exports = module.exports = __webpack_require__(153)(undefined);
 
 
 // module
-exports.push([module.i, "body {\n  background-color: #40525C; }\n\n#speed {\n  font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial, Helvetica, sans-serif;\n  position: absolute;\n  z-index: 10;\n  height: calc(750px - 50px);\n  width: 450px;\n  top: 50px;\n  color: white;\n  padding: 20px 20px 20px 20px;\n  background-color: rgba(150, 150, 150, 0.7);\n  font-weight: 800;\n  font-size: 18px; }\n  #speed .speed {\n    font-size: 96px;\n    font-weight: 100;\n    letter-spacing: 1px;\n    text-align: center; }\n  #speed .temp {\n    font-size: 54px;\n    font-weight: 100;\n    letter-spacing: 1px;\n    text-align: center; }\n  #speed .car-type {\n    text-align: center;\n    font-size: 12px; }\n    #speed .car-type col-md-2 {\n      padding-left: 0 !important; }\n    #speed .car-type a {\n      color: white;\n      padding: 10px 10px 10px 10px; }\n    #speed .car-type .activate {\n      background-color: #D06B40; }\n    #speed .car-type a:hover {\n      background-color: #D06B40;\n      text-decoration: none; }\n  #speed .play {\n    font-size: 24px; }\n    #speed .play a {\n      color: white; }\n    #speed .play a:hover {\n      color: #D06B40;\n      text-decoration: none; }\n\n.title {\n  font-size: 14px;\n  margin-top: 10px;\n  text-align: left;\n  margin-bottom: 10px; }\n\n.monthSelection {\n  font-size: 12px; }\n\n.loading {\n  color: white;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  z-index: 999;\n  background-color: rgba(100, 100, 100, 0.5);\n  padding-top: 30%;\n  text-align: center;\n  font-size: 20px;\n  font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial, Helvetica, sans-serif; }\n\n#bar {\n  z-index: 10;\n  height: 12px;\n  width: 100%;\n  bottom: 138px;\n  position: absolute;\n  z-index: 10;\n  color: white;\n  padding: 20px 20px 20px 20px;\n  background-color: rgba(150, 150, 150, 0.7);\n  font-weight: 800;\n  font-size: 18px;\n  padding: 0 0 0 0; }\n\n#static {\n  top: calc(100% - 150px);\n  position: absolute;\n  padding-top: 5%;\n  color: white;\n  width: 100%;\n  height: 100%;\n  background: #485563;\n  /* fallback for old browsers */\n  background: -webkit-linear-gradient(to right, #485563, #29323c);\n  /* Chrome 10-25, Safari 5.1-6 */\n  background: linear-gradient(to right, #485563, #29323c);\n  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }\n  #static .title {\n    font-size: 18px; }\n  #static .orange {\n    margin-top: 10px;\n    width: 100%;\n    height: 10px;\n    background-color: #D06B40;\n    text-align: center; }\n  #static .orange-text {\n    color: #D06B40;\n    margin-top: 5px;\n    text-align: center; }\n  #static .pink {\n    margin-top: 10px;\n    width: 100%;\n    height: 10px;\n    background-color: #D48CB4;\n    text-align: center; }\n  #static .pink-text {\n    color: #D48CB4;\n    margin-top: 5px;\n    text-align: center; }\n  #static .blue {\n    margin-top: 10px;\n    width: 100%;\n    height: 10px;\n    background-color: #6694FC;\n    text-align: center; }\n  #static .blue-text {\n    color: #6694FC;\n    margin-top: 5px;\n    text-align: center; }\n  #static .green {\n    margin-top: 10px;\n    width: 100%;\n    height: 10px;\n    background-color: #80B891;\n    text-align: center; }\n  #static .green-text {\n    color: #80B891;\n    margin-top: 5px;\n    text-align: center; }\n  #static .illustration {\n    margin-top: 50px;\n    font-size: 24px;\n    background-color: white;\n    padding: 20px 20px 20px 20px;\n    color: #4a4c5b;\n    border-radius: 5px; }\n    #static .illustration a {\n      font-size: 18px; }\n\n#predict {\n  font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial, Helvetica, sans-serif;\n  top: calc(200% - 150px);\n  padding-top: 10%;\n  position: absolute;\n  color: white;\n  width: 100%;\n  height: 100%;\n  background: #7474BF;\n  /* fallback for old browsers */\n  background: -webkit-linear-gradient(to right, #348AC7, #7474BF);\n  /* Chrome 10-25, Safari 5.1-6 */\n  background: linear-gradient(to right, #348AC7, #7474BF);\n  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }\n  #predict .title {\n    font-size: 24px; }\n  #predict .speed {\n    font-size: 110px;\n    font-weight: 100;\n    letter-spacing: 1px;\n    text-align: center; }\n  #predict .secondSpeed {\n    font-size: 72px;\n    font-weight: 100;\n    letter-spacing: 1px; }\n\n.fadeIn {\n  -webkit-animation: fadein 2s;\n  /* Safari, Chrome and Opera > 12.1 */\n  -moz-animation: fadein 2s;\n  /* Firefox < 16 */\n  -ms-animation: fadein 2s;\n  /* Internet Explorer */\n  -o-animation: fadein 2s;\n  /* Opera < 12.1 */\n  animation: fadein 2s; }\n\n@keyframes fadein {\n  from {\n    opacity: 0; }\n  to {\n    opacity: 1; } }\n\n/* Firefox < 16 */\n@-moz-keyframes fadein {\n  from {\n    opacity: 0; }\n  to {\n    opacity: 1; } }\n\n/* Safari, Chrome and Opera > 12.1 */\n@-webkit-keyframes fadein {\n  from {\n    opacity: 0; }\n  to {\n    opacity: 1; } }\n\n/* Internet Explorer */\n@-ms-keyframes fadein {\n  from {\n    opacity: 0; }\n  to {\n    opacity: 1; } }\n\n/* Opera < 12.1 */\n@-o-keyframes fadein {\n  from {\n    opacity: 0; }\n  to {\n    opacity: 1; } }\n", ""]);
+exports.push([module.i, "body {\n  background-color: #40525C; }\n\n#speed {\n  font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial, Helvetica, sans-serif;\n  position: absolute;\n  z-index: 10;\n  height: 680px;\n  width: 450px;\n  top: 15px;\n  color: white;\n  padding: 20px 20px 20px 20px;\n  background-color: rgba(150, 150, 150, 0.7);\n  font-weight: 800;\n  font-size: 18px; }\n  #speed .speed {\n    font-size: 96px;\n    font-weight: 100;\n    letter-spacing: 1px;\n    text-align: center; }\n  #speed .temp {\n    font-size: 54px;\n    font-weight: 100;\n    letter-spacing: 1px;\n    text-align: center; }\n  #speed .car-type {\n    text-align: center;\n    font-size: 12px; }\n    #speed .car-type col-md-2 {\n      padding-left: 0 !important; }\n    #speed .car-type a {\n      color: white;\n      padding: 10px 10px 10px 10px; }\n    #speed .car-type .activate {\n      background-color: #D06B40; }\n    #speed .car-type a:hover {\n      background-color: #D06B40;\n      text-decoration: none; }\n  #speed .play {\n    font-size: 24px; }\n    #speed .play a {\n      color: white; }\n    #speed .play a:hover {\n      color: #D06B40;\n      text-decoration: none; }\n\n.title {\n  font-size: 14px;\n  margin-top: 10px;\n  text-align: left;\n  margin-bottom: 10px; }\n\n.monthSelection {\n  font-size: 12px; }\n\n.loading {\n  color: white;\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  z-index: 999;\n  background-color: rgba(100, 100, 100, 0.5);\n  padding-top: 30%;\n  text-align: center;\n  font-size: 20px;\n  font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial, Helvetica, sans-serif; }\n\n#bar {\n  z-index: 10;\n  height: 12px;\n  width: 100%;\n  bottom: 138px;\n  z-index: 10;\n  color: white;\n  padding: 20px 20px 20px 20px;\n  background-color: rgba(150, 150, 150, 0.7);\n  font-weight: 800;\n  font-size: 18px;\n  padding: 0 0 0 0; }\n\n#static {\n  padding-top: 5%;\n  color: white;\n  width: 100%;\n  height: 100%;\n  min-height: 830px;\n  background: #485563;\n  /* fallback for old browsers */\n  background: -webkit-linear-gradient(to right, #485563, #29323c);\n  /* Chrome 10-25, Safari 5.1-6 */\n  background: linear-gradient(to right, #485563, #29323c);\n  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }\n  #static .title {\n    font-size: 18px; }\n  #static .orange {\n    margin-top: 10px;\n    width: 100%;\n    height: 10px;\n    background-color: #D06B40;\n    text-align: center; }\n  #static .orange-text {\n    color: #D06B40;\n    margin-top: 5px;\n    text-align: center; }\n  #static .pink {\n    margin-top: 10px;\n    width: 100%;\n    height: 10px;\n    background-color: #D48CB4;\n    text-align: center; }\n  #static .pink-text {\n    color: #D48CB4;\n    margin-top: 5px;\n    text-align: center; }\n  #static .blue {\n    margin-top: 10px;\n    width: 100%;\n    height: 10px;\n    background-color: #6694FC;\n    text-align: center; }\n  #static .blue-text {\n    color: #6694FC;\n    margin-top: 5px;\n    text-align: center; }\n  #static .green {\n    margin-top: 10px;\n    width: 100%;\n    height: 10px;\n    background-color: #80B891;\n    text-align: center; }\n  #static .green-text {\n    color: #80B891;\n    margin-top: 5px;\n    text-align: center; }\n  #static .illustration {\n    margin-top: 50px;\n    font-size: 24px;\n    background-color: white;\n    padding: 20px 20px 20px 20px;\n    color: #4a4c5b;\n    border-radius: 5px; }\n    #static .illustration a {\n      font-size: 18px; }\n\n#predict {\n  font-family: 'HelveticaNeue-UltraLight', 'Helvetica Neue UltraLight', 'Helvetica Neue', Arial, Helvetica, sans-serif;\n  min-height: 900px;\n  padding-top: 10%;\n  color: white;\n  width: 100%;\n  height: 100%;\n  background: #7474BF;\n  /* fallback for old browsers */\n  background: -webkit-linear-gradient(to right, #348AC7, #7474BF);\n  /* Chrome 10-25, Safari 5.1-6 */\n  background: linear-gradient(to right, #348AC7, #7474BF);\n  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }\n  #predict .title {\n    font-size: 24px; }\n  #predict .speed {\n    font-size: 110px;\n    font-weight: 100;\n    letter-spacing: 1px;\n    text-align: center; }\n  #predict .secondSpeed {\n    font-size: 72px;\n    font-weight: 100;\n    letter-spacing: 1px; }\n\n.fadeIn {\n  -webkit-animation: fadein 2s;\n  /* Safari, Chrome and Opera > 12.1 */\n  -moz-animation: fadein 2s;\n  /* Firefox < 16 */\n  -ms-animation: fadein 2s;\n  /* Internet Explorer */\n  -o-animation: fadein 2s;\n  /* Opera < 12.1 */\n  animation: fadein 2s; }\n\n@keyframes fadein {\n  from {\n    opacity: 0; }\n  to {\n    opacity: 1; } }\n\n/* Firefox < 16 */\n@-moz-keyframes fadein {\n  from {\n    opacity: 0; }\n  to {\n    opacity: 1; } }\n\n/* Safari, Chrome and Opera > 12.1 */\n@-webkit-keyframes fadein {\n  from {\n    opacity: 0; }\n  to {\n    opacity: 1; } }\n\n/* Internet Explorer */\n@-ms-keyframes fadein {\n  from {\n    opacity: 0; }\n  to {\n    opacity: 1; } }\n\n/* Opera < 12.1 */\n@-o-keyframes fadein {\n  from {\n    opacity: 0; }\n  to {\n    opacity: 1; } }\n", ""]);
 
 // exports
 
@@ -68411,6 +68442,8 @@ var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -68431,13 +68464,19 @@ var Speed = function (_React$Component) {
 		_this.directionChange = _this.directionChange.bind(_this);
 		_this.roadChange = _this.roadChange.bind(_this);
 		_this.roadTypeChange = _this.roadTypeChange.bind(_this);
+		_this.changeCarType = _this.changeCarType.bind(_this);
 		_this.state = {
 			year: "2014",
 			month: "9",
 			playing: false,
 			stations: [],
 			road_type: "國1",
-			selectDirection: "S"
+			selectDirection: "S",
+			smallCar: true,
+			smallVan: false,
+			bus: false,
+			bigVan: false,
+			connectCar: false
 		};
 		return _this;
 	}
@@ -68522,8 +68561,28 @@ var Speed = function (_React$Component) {
 			});
 		}
 	}, {
+		key: 'changeCarType',
+		value: function changeCarType(id) {
+			var _this4 = this;
+
+			var self = this;
+			this.setState({
+				smallCar: false,
+				smallVan: false,
+				bus: false,
+				bigVan: false,
+				connectCar: false
+			}, function () {
+				_this4.setState(_defineProperty({}, id, true), function () {
+					self.props.updateCarType(id);
+				});
+			});
+		}
+	}, {
 		key: 'render',
 		value: function render() {
+			var _this5 = this;
+
 			return _react2.default.createElement(
 				'div',
 				{ id: 'speed' },
@@ -68538,7 +68597,7 @@ var Speed = function (_React$Component) {
 						{ className: 'row' },
 						_react2.default.createElement(
 							'div',
-							{ className: 'col-md-3 form-group' },
+							{ className: 'col-xs-3 col-sm-3 col-md-3 form-group' },
 							_react2.default.createElement(
 								'select',
 								{ className: 'form-control', value: this.state.road_type, onChange: this.roadTypeChange },
@@ -68571,7 +68630,7 @@ var Speed = function (_React$Component) {
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'col-md-3 form-group' },
+							{ className: 'col-xs-3 col-sm-3 col-md-3 form-group' },
 							_react2.default.createElement(
 								'select',
 								{ className: 'form-control', value: this.state.selectDirection, onChange: this.directionChange },
@@ -68589,7 +68648,7 @@ var Speed = function (_React$Component) {
 						),
 						_react2.default.createElement(
 							'div',
-							{ className: 'col-md-6 form-group' },
+							{ className: 'col-xs-6 col-sm-6 col-md-6 form-group' },
 							_react2.default.createElement(
 								'select',
 								{ className: 'form-control', value: this.state.selectRoad, onChange: this.roadChange },
@@ -68623,7 +68682,7 @@ var Speed = function (_React$Component) {
 					{ className: 'row', style: { textAlign: 'center' } },
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-4' },
+						{ className: 'col-md-4 col-sm-4 col-xs-4' },
 						'\u884C\u99DB\u7D04 ',
 						_react2.default.createElement('br', null),
 						_react2.default.createElement(
@@ -68639,7 +68698,7 @@ var Speed = function (_React$Component) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-4' },
+						{ className: 'col-md-4 col-sm-4 col-xs-4' },
 						'\u6C23\u6EAB ',
 						_react2.default.createElement('br', null),
 						_react2.default.createElement(
@@ -68655,7 +68714,7 @@ var Speed = function (_React$Component) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-4' },
+						{ className: 'col-md-4 col-sm-4 col-xs-4' },
 						'\u96E8\u91CF ',
 						_react2.default.createElement('br', null),
 						_react2.default.createElement(
@@ -68670,55 +68729,65 @@ var Speed = function (_React$Component) {
 					{ className: 'row center car-type' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-12 title' },
+						{ className: 'col-md-12 title col-sm-12 col-xs-12' },
 						'\u8ECA\u7A2E'
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-offset-1 col-md-2', style: { padding: '0 0 0 0' } },
+						{ className: 'col-md-offset-1 col-md-2 col-sm-2 col-xs-2', style: { padding: '0 0 0 0' } },
 						_react2.default.createElement(
 							'a',
-							{ className: 'hvr-fade activate', href: '' },
+							{ className: 'hvr-fade ' + (this.state.smallCar ? 'activate' : ''), id: 'smallCar', onClick: function onClick(e) {
+									return _this5.changeCarType("smallCar", e);
+								} },
 							'\u5C0F\u5BA2\u8ECA',
 							_react2.default.createElement('img', { width: '100%', src: __webpack_require__(815) })
 						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-2 ', style: { padding: '0 0 0 0' } },
+						{ className: 'col-md-2 col-sm-2 col-xs-2', style: { padding: '0 0 0 0' } },
 						_react2.default.createElement(
 							'a',
-							{ className: 'hvr-fade', href: '' },
+							{ className: 'hvr-fade ' + (this.state.smallVan ? 'activate' : ''), id: 'smallVan', onClick: function onClick(e) {
+									return _this5.changeCarType("smallVan", e);
+								} },
 							'\u5C0F\u8CA8\u8ECA',
 							_react2.default.createElement('img', { width: '100%', src: __webpack_require__(816) })
 						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-2', style: { padding: '0 0 0 0' } },
+						{ className: 'col-md-2 col-sm-2 col-xs-2', style: { padding: '0 0 0 0' } },
 						_react2.default.createElement(
 							'a',
-							{ className: 'hvr-back-pulse', href: '' },
+							{ className: 'hvr-fade ' + (this.state.bus ? 'activate' : ''), id: 'bus', onClick: function onClick(e) {
+									return _this5.changeCarType("bus", e);
+								} },
 							'\u5927\u5BA2\u8ECA',
 							_react2.default.createElement('img', { width: '100%', src: __webpack_require__(817) })
 						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-2', style: { padding: '0 0 0 0' } },
+						{ className: 'col-md-2 col-sm-2 col-xs-2', style: { padding: '0 0 0 0' } },
 						_react2.default.createElement(
 							'a',
-							{ className: 'hvr-back-pulse', href: '' },
+							{ className: 'hvr-fade ' + (this.state.bigVan ? 'activate' : ''), id: 'bigVan', onClick: function onClick(e) {
+									return _this5.changeCarType("bigVan", e);
+								} },
 							'\u5927\u8CA8\u8ECA',
 							_react2.default.createElement('img', { width: '100%', src: __webpack_require__(818) })
 						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-2', style: { padding: '0 0 0 0' } },
+						{ className: 'col-md-2 col-sm-2 col-xs-2', style: { padding: '0 0 0 0' } },
 						_react2.default.createElement(
 							'a',
-							{ className: 'hvr-back-pulse', href: '' },
+							{ className: 'hvr-fade ' + (this.state.connectCar ? 'activate' : ''), id: 'connectCar', onClick: function onClick(e) {
+									return _this5.changeCarType("connectCar", e);
+								} },
 							'\u806F\u7D50\u8ECA',
 							_react2.default.createElement('img', { width: '100%', src: __webpack_require__(819) })
 						)
@@ -68729,12 +68798,12 @@ var Speed = function (_React$Component) {
 					{ className: 'row monthSelection' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-12 title' },
+						{ className: 'col-md-12 col-sm-12 title' },
 						'\u67E5\u770B\u6708\u4EFD'
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-6' },
+						{ className: 'col-md-6 col-sm-6 col-xs-6' },
 						_react2.default.createElement(
 							'div',
 							{ className: 'form-group' },
@@ -68772,7 +68841,7 @@ var Speed = function (_React$Component) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-6' },
+						{ className: 'col-md-6 col-sm-6 col-xs-6' },
 						_react2.default.createElement(
 							'div',
 							{ className: 'form-group' },
@@ -68850,7 +68919,7 @@ var Speed = function (_React$Component) {
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'col-md-12 play' },
+						{ className: 'col-md-12 col-sm-12 col-xs-12 play' },
 						_react2.default.createElement(
 							'a',
 							{ onClick: this.playHistory },
@@ -70062,9 +70131,9 @@ var Map = function (_React$Component) {
         value: function render() {
             return _react2.default.createElement(
                 'div',
-                { style: { position: 'absolute', height: '100%', width: '100%' } },
+                { style: { position: 'relative', height: 'calc(100% - 150px)', width: '100%', minHeight: '700px' } },
                 this.state.loading && _react2.default.createElement(Loading, null),
-                _react2.default.createElement('div', { id: 'map', style: { width: '100%', height: 'calc(100% - 150px)' } })
+                _react2.default.createElement('div', { id: 'map', style: { width: '100%', height: '100%' } })
             );
         }
     }]);
@@ -84335,18 +84404,23 @@ var DataSeries = _react2.default.createClass({
     var color = ["#D06B40", "#D48CB4", "#6694FC", "#80B891"];
 
     var lines = data.points.map(function (series, id) {
-      var maxSpeed = -1000;
-      var miniSpeed = 1000;
+      var allValues = [];
       for (var j = 0; j < series.length; j++) {
-        if (parseInt(series[j].average_speed) > maxSpeed) maxSpeed = series[j].average_speed;
-        if (parseInt(series[j].average_speed) < miniSpeed) miniSpeed = series[j].average_speed;
+        allValues.push(series[j].average_speed);
       }
-      var yScale = (0, _d3Scale.scaleLinear)().domain([miniSpeed, maxSpeed]).range([0, 400]);
 
-      if (id == 2) {
-        console.log(maxSpeed);
-        console.log(miniSpeed);
-        console.log(yScale(0));
+      var max = allValues.reduce(function (a, b) {
+        return Math.max(a, b);
+      });
+
+      var mini = allValues.reduce(function (a, b) {
+        return Math.min(a, b);
+      });
+
+      if (id) {
+        var yScale = (0, _d3Scale.scaleLinear)().domain([max, mini]).range([0, 400]);
+      } else {
+        var yScale = (0, _d3Scale.scaleLinear)().domain([mini, max]).range([0, 400]);
       }
 
       var line = d3.line().curve(d3.curveBasis).x(function (d) {

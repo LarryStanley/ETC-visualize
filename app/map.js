@@ -244,9 +244,9 @@ export default class Map extends React.Component {
 
     render () {
         return (
-            <div style={{position: `absolute`, height: `100%`, width: `100%`}}>
+            <div style={{position: `relative`, height: `calc(100% - 150px)`, width: `100%`, minHeight: `700px`}}>
                 {this.state.loading && <Loading/>}
-                <div id='map' style={{ width: `100%`, height: `calc(100% - 150px)` }}></div>
+                <div id='map' style={{ width: `100%`, height: `100%`}}></div>
             </div>
         );
     }

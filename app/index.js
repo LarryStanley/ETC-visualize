@@ -24,6 +24,7 @@ class MainFrame extends React.Component {
     this.updateRoadSelection = this.updateRoadSelection.bind(this)
     this.getSelectRoadHistory = this.getSelectRoadHistory.bind(this)
     this.updateTimeStampFromSpeed = this.updateTimeStampFromSpeed.bind(this)
+    this.updateCarType = this.updateCarType.bind(this)
     this.state = { 
       currentDate: moment("2014-09-01 00:00:00").format("YYYY-MM-DD HH:MM"),
       currentSpeed: 75,
@@ -147,6 +148,30 @@ class MainFrame extends React.Component {
     })
   }
 
+  updateCarType(type) {
+    if (type == 'smallCar') {
+      this.setState({
+        car_type: 31
+      })
+    } else if(type == 'smallVan') {
+      this.setState({
+        car_type: 32
+      })
+    } else if(type == 'bus') {
+      this.setState({
+        car_type: 41
+      })
+    } else if(type == 'bigVan') {
+      this.setState({
+        car_type: 42
+      })
+    } else {
+      this.setState({
+        car_type: 5
+      })
+    }
+  }
+
   getSelectRoadHistory() {
     var self = this;
     var date = moment(self.state.currentTimeStamp, "X");
@@ -218,7 +243,9 @@ class MainFrame extends React.Component {
               playing={this.state.playing}
               pauseHistory={this.pause}
               updateRoadSelection={this.updateRoadSelection}
-              updateTimeStampFromSpeed={this.updateTimeStampFromSpeed} />
+              updateTimeStampFromSpeed={this.updateTimeStampFromSpeed}
+              updateCarType={this.updateCarType} />
+
         <Bar defaultValue={parseInt(moment("2014-09-01 00:00:00").format("X"))}
         value={this.state.currentTimeStamp} 
    startPeriodTime={this.state.startPeriodTime} 
@@ -226,8 +253,11 @@ class MainFrame extends React.Component {
   updateCurrentTime={this.updateCurrentTime} 
 beforeUpdateSlider={this.beforeUpdateSlider}
  afterUpdateSlider={this.afterUpdateSlider} />
-        <Static onRef={ref => (this.static = ref)} road_name={this.state.road_name} width={600} height={400}/>
-        <Predict onRef={ref => (this.predict = ref)} height={400}/>
+
+        <div style={{ position: `absolute`, height: `100%`, width: `100%` }}>
+          <Static onRef={ref => (this.static = ref)} road_name={this.state.road_name} width={600} height={400}/>
+          <Predict onRef={ref => (this.predict = ref)} height={400}/>
+        </div>
       </div>
     )
   }

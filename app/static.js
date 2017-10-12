@@ -314,23 +314,28 @@ const DataSeries = React.createClass({
     var color = ["#D06B40", "#D48CB4", "#6694FC", "#80B891"]
 
     let lines = data.points.map((series, id) => {
-      var maxSpeed = -1000
-      var miniSpeed = 1000
+      var allValues = []
       for (var j = 0; j < series.length; j++) {
-        if (parseInt(series[j].average_speed) > maxSpeed)
-          maxSpeed = series[j].average_speed
-        if (parseInt(series[j].average_speed) < miniSpeed)
-          miniSpeed = series[j].average_speed
+        allValues.push(series[j].average_speed)
       }
-      var yScale = scaleLinear()
-                .domain([miniSpeed, maxSpeed])
-                .range([0, 400]);
 
-      if (id == 2) {
-        console.log(maxSpeed)
-        console.log(miniSpeed)
-        console.log(yScale(0))
-      } 
+      var max = allValues.reduce(function(a, b) {
+          return Math.max(a, b);
+      });
+
+       var mini = allValues.reduce(function(a, b) {
+          return Math.min(a, b);
+      });
+
+      if (id) {
+        var yScale = scaleLinear()
+                .domain([max, mini])
+                .range([0, 400]);
+      } else {
+         var yScale = scaleLinear()
+                .domain([mini, max])
+                .range([0, 400]); 
+      }
 
         let line = d3.line()
           .curve(d3.curveBasis)
