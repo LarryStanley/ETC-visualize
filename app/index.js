@@ -134,6 +134,7 @@ class MainFrame extends React.Component {
     }, () => {
       this.map.changeMapCenter(lat, lng)
       this.getSelectRoadHistory()
+      this.predict.getPredictData(value, road_name, this.state.car_type)
     })
   }
 

@@ -9,6 +9,7 @@ import { select } from 'd3-selection'
 import { axisLeft, axisBottom } from 'd3-axis'
 import { line } from 'd3-shape'
 import * as d3 from 'd3';
+import ReactLoading from 'react-loading';
 
 export default class Static extends React.Component {
 	constructor(props) {
@@ -33,7 +34,8 @@ export default class Static extends React.Component {
         time_type: "A",
         currentWeatherStation: "C0AD00",
         currentPoints: 0,
-        allStaticPoints: []
+        allStaticPoints: [],
+        loading: true
       }
 	}
 
@@ -46,6 +48,9 @@ export default class Static extends React.Component {
 
   getData(station, year, car_type, currentWeatherStation) {
     var self = this;
+    this.setState({
+      loading: true
+    })
      axios.get("https://etc-api.ncufood.info/history/month/station?station=" + station + "&year=" + year
       + "&car_type=" + car_type + "&time_type=" + self.state.time_type)
         .then(function(response) {
@@ -106,7 +111,8 @@ export default class Static extends React.Component {
         station: station,
         car_type: car_type,
         year: year,
-        currentWeatherStation: currentWeatherStation
+        currentWeatherStation: currentWeatherStation,
+        loading: false
       }, () => {
       })
     })
@@ -144,8 +150,9 @@ export default class Static extends React.Component {
 	render() {
 		return (
 			<div id="static">
+        {this.state.loading && <Loading/>}
 				<div className="container" ref={input => {this.container = input}}>
-          <div className="row">
+          <div className="row" style={{ marginTop: `5%`}}>
             <div className="col-md-2">
               <div className="form-group">
                 <select value={this.state.time_type} onChange={this.changeTimeType} className="form-control">
@@ -362,3 +369,15 @@ const DataSeries = React.createClass({
   }
 
 });
+
+class Loading extends React.Component{
+    render() {
+        return(
+            <div className="loading">
+                <div style={{ left: `50%`, marginRight: `32px` , position: `absolute`}}>
+                    <ReactLoading type="bars"/>
+                </div>
+            </div>
+        )
+    }
+}
